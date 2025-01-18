@@ -38,6 +38,10 @@ const loadingMessages = [
   "Adding some magic...",
   "Bringing characters to life..."
 ];
+
+// Array to hold images for the storybook
+const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.png"];
+
 ---
 
 <Layout
@@ -148,7 +152,7 @@ const loadingMessages = [
   }
 </style>
 
-<script define:vars={{ API_KEY, loadingMessages }}>
+<script define:vars={{ API_KEY, loadingMessages, storyImages }}>
   const answers = {};
   let isGenerating = false;
 
@@ -211,7 +215,10 @@ const loadingMessages = [
       // Display the generated story
       storyContent.innerHTML = generatedText.split('\n')
         .filter(para => para.trim())
-        .map(para => `<p>${para}</p>`)
+        .map((para, index) => {
+          const image = storyImages[index];
+          return image ? `<div class="flex"><img src="${image}" alt="Story image"><p>${para}</p></div>` : `<p>${para}</p>`;
+        })
         .join('');
       
       // Replace the questions with the story container
