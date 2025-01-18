@@ -1,4 +1,4 @@
----
+<!-- ---
 title: Blogpost 2
 pubDate: 12/31/2022 12:05
 author: "Elian Van Cutsem"
@@ -43,4 +43,4 @@ excipit mixtaeque inferior, haec percepit regum: nec nec sit ferenti.
 Insistere pugno. Cum morae vigilantibus dulces Cycnus: neque cum sororis.
 
 Hac Aestas solet docebo tandem tamquam omnis vitiantur mitte, vatis in animique
-infelix passimque. Superasset onus.
+infelix passimque. Superasset onus. -->
