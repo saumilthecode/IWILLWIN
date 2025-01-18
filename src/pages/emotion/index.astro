@@ -27,13 +27,6 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
         <!-- Options will be dynamically inserted here -->
       </div>
 
-      <button
-        id="next-round"
-        class="hidden w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
-      >
-        Next Round
-      </button>
-
       <div id="game-over" class="hidden text-center">
         <h2 class="text-2xl font-bold mb-4">Game Over!</h2>
         <p class="text-xl mb-4">Final Score: <span id="final-score">0</span></p>
@@ -102,17 +95,25 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
     const explanationDiv = document.createElement('div');
     explanationDiv.className = 'mt-4 text-gray-700 text-center';
     explanationDiv.textContent = currentImage.explanation;
-    document.getElementById('options-container').appendChild(explanationDiv);
+    
+    // Create next round button
+    const nextButton = document.createElement('button');
+    nextButton.textContent = 'Next Round';
+    nextButton.className = 'mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors';
+    nextButton.onclick = () => {
+      currentRound++;
+      startNewRound();
+    };
 
-    currentRound++;
-    document.getElementById('next-round').classList.remove('hidden');
+    const container = document.getElementById('options-container');
+    container.appendChild(explanationDiv);
+    container.appendChild(nextButton);
   }
 
   function startNewRound() {
     if (currentRound >= maxRounds) {
       document.getElementById('final-score').textContent = score;
       document.getElementById('game-over').classList.remove('hidden');
-      document.getElementById('next-round').classList.add('hidden');
       return;
     }
 
@@ -132,11 +133,7 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
       button.onclick = () => checkAnswer(option, currentImage.emotion);
       optionsContainer.appendChild(button);
     });
-
-    document.getElementById('next-round').classList.add('hidden');
   }
-
-  document.getElementById('next-round').addEventListener('click', startNewRound);
 
   // Start the first round
   startNewRound();
