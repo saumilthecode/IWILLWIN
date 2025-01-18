@@ -17,7 +17,8 @@ const storyQuestions = [
   "What emotions do you feel at the end?",
   "If you were them, what would you do?",
   "Could you do as they did?",
-  "Do you think they're brave?"
+  "Do you think they're brave?",
+  "Would you like to add another character to your story?"
 ];
 
 // Generate question that should always be last
@@ -107,17 +108,52 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
         </div>
       ))}
       <hr class="my-8 border-t border-gray-300 w-full" />
-      <div class="story-content">
-        <p>Once upon a time...</p>
-        <p>...in a land far, far away...</p>
-        <p>...a brave hero embarked on a quest...</p>
-        <p>...to save the kingdom from darkness.</p>
-      </div>
     </div>
   </main>
 </Layout>
 
 <style>
+  .storybook-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+.storybook-page {
+  display: flex;
+  min-height: 600px;
+  background: white;
+  border: 4px solid black;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+}
+
+.text-side, .image-side {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-content {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  padding: 1rem;
+}
+
+.divider {
+  width: 4px;
+  background-color: black;
+  margin: 2rem 0;
+}
+
+.image-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
   .shadow-brutal {
     box-shadow: 4px 4px 0 0 #000;
   }
@@ -175,10 +211,10 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
     }
     
     const storyContainer = document.createElement('div');
-    storyContainer.className = 'bg-white p-8 rounded-lg border-4 border-black shadow-brutal mt-8 story-container';
+    storyContainer.className = 'bg-white rounded-lg border-4 border-black shadow-brutal mt-8 story-container storybook-container';
     
-    const storyContent = document.createElement('div');
-    storyContent.className = 'prose prose-lg max-w-none';
+//    const storyContent = document.createElement('div');
+//    storyContent.className = 'prose prose-lg max-w-none';
     
     try {
       console.log('Starting story generation with answers:', answers);
@@ -219,14 +255,36 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
 
       const generatedText = data.candidates[0].content.parts[0].text;
       
-      // Display the generated story
-      storyContent.innerHTML = generatedText.split('\n')
-        .filter(para => para.trim())
-        .map((para, index) => {
-          const image = storyImages[index];
-          return image ? `<div class="flex"><img src="${image}" alt="Story image"><p>${para}</p></div>` : `<p>${para}</p>`;
-        })
-        .join('');
+      // Create the storybook layout
+      const paragraphs = generatedText.split('\n').filter(para => para.trim());
+      
+      // Create storybook pages
+      const storyContent = paragraphs.map((para, index) => {
+        const image = storyImages[index];
+        return `
+          <div class="storybook-page">
+            ${index % 2 === 0 ? `
+              <div class="text-side">
+                <div class="text-content">${para}</div>
+              </div>
+              <div class="divider"></div>
+              <div class="image-side">
+                <img src="${image}" alt="Story image" class="w-full h-full object-cover">
+              </div>
+            ` : `
+              <div class="image-side">
+                <img src="${image}" alt="Story image" class="w-full h-full object-cover">
+              </div>
+              <div class="divider"></div>
+              <div class="text-side">
+                <div class="text-content">${para}</div>
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+      
+      storyContainer.innerHTML = storyContent;
       
       // Replace the questions with the story container
       const mainContainer = document.querySelector('.max-w-2xl');
@@ -234,7 +292,6 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
         mainContainer.innerHTML = '';
         mainContainer.appendChild(storyContainer);
       }
-      storyContainer.appendChild(storyContent);
 
       // Add share button
       const buttonContainer = document.createElement('div');
@@ -273,7 +330,6 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
       }
     }
   }
-
   function showNextQuestion(currentIndex) {
     const currentQuestion = document.querySelector(`[data-question-index="${currentIndex}"]`);
     const nextQuestion = document.querySelector(`[data-question-index="${currentIndex + 1}"]`);

@@ -1,0 +1,100 @@
+---
+import Layout from '@layouts/Default.astro';
+
+// Define colors for styling
+const colors = ['bg-pink', 'bg-blue', 'bg-green', 'bg-yellow', 'bg-purple'];
+const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+// Define images for the emotion guessing game
+const images = [
+    { src: 'https://cdn.discordapp.com/attachments/1250429178705088543/1330227557081157652/17c580dade964e3b643821b808a4cab8.png', alt: 'Confused', emotion: 'confused' },
+    { src: 'https://cdn.discordapp.com/attachments/1250429178705088543/1330227619144273930/3399b2232d8068dd07045592e8324b4d.png', alt: 'Happy', emotion: 'happy' },
+    { src: 'https://cdn.discordapp.com/attachments/1250429178705088543/1330227666149834773/9f1ed3fb2b9c0e03e5a43109c5d2b18e.png', alt: 'Sad', emotion: 'sad' },
+    { src: 'https://cdn.discordapp.com/attachments/1250429178705088543/1330227815253147731/207d0ad59ae14b4cdd3f69a2eba9057b.png', alt: 'Longing', emotion: 'longing' },
+    { src: 'https://cdn.discordapp.com/attachments/1250429178705088543/1330228144254353479/5ef13904e13fcdc6ad7ee7b938039003.png', alt: 'Playful', emotion: 'playful' },
+    { src: 'https://cdn.discordapp.com/attachments/1250429178705088543/1330228186117705878/13f0c08f198a6887024a39f24a900818.png', alt: 'Determined', emotion: 'determined' },
+    { src: 'https://cdn.discordapp.com/attachments/1250429178705088543/1330228271606009877/fabb4b928b7f0d279007274b2cb8727b.png', alt: 'Touched', emotion: 'touched' },
+    { src: 'https://cdn.discordapp.com/attachments/1250429178705088543/1330228513512489030/757c75d22dc02a8c4d590ea27c63eb8a.png', alt: 'Sad', emotion: 'sad' }
+];
+
+---
+
+<Layout
+    title='Emotion'
+    pageTitle='Stoorybook | Emotion'
+    description='Emotion page'
+>
+    <main class={`p-6 min-h-screen flex flex-col items-center gap-8 ${randomColor}`}>
+        <div class="max-w-7xl mx-auto">
+            <header class="mb-8">
+                <h1 class="text-6xl font-bold text-gray-800 mb-2">Emotion</h1>
+                <p class="text-2xl text-gray-600">Guess the emotion</p>
+            </header>
+            
+            <div class="mt-8">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Guess the Emotion</h2>
+                <img src={images[0].src} alt={images[0].alt} class="emotion-image w-full h-64 object-cover mb-4" />
+                <div class="grid grid-cols-2 gap-4">
+                    {images.map((image) => (
+                        <button class="emotion-option p-4 bg-gray-200 rounded" onclick={`checkAnswer('${image.emotion}')`}>
+                            {image.emotion}
+                        </button>
+                    ))}
+                </div>
+                <p id="result" class="mt-4 text-xl"></p>
+            </div>
+            
+            <script>
+                let currentRound = 0;
+                let selectedImage = images[Math.floor(Math.random() * images.length)];
+
+                function checkAnswer(selectedEmotion) {
+                    const correctEmotion = selectedImage.emotion;
+                    const resultElement = document.getElementById('result');
+                    if (resultElement) {
+                        if (selectedEmotion === correctEmotion) {
+                            resultElement.textContent = 'Correct! 🎉';
+                        } else {
+                            resultElement.textContent = 'Try again! 😢';
+                        }
+                    }
+
+                    setTimeout(() => {
+                        if (currentRound < images.length - 1) {
+                            currentRound++;
+                            selectedImage = images[Math.floor(Math.random() * images.length)];
+                            updateRound();
+                        } else {
+                            resultElement.textContent = 'Quiz completed!';
+                        }
+                    }, 2000);
+                }
+
+                function updateRound() {
+                    const imageElement = document.querySelector('.emotion-image') as HTMLImageElement;
+                    if (imageElement) {
+                        imageElement.src = selectedImage.src;
+                        imageElement.alt = selectedImage.alt;
+                        document.getElementById('result').textContent = '';
+                    }
+                }
+            </script>
+        </div>
+    </main>
+</Layout>
+
+<style is:global>
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+    .emotion-image {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+    }
+    .emotion-option {
+        cursor: pointer;
+        text-align: center;
+    }
+</style>
