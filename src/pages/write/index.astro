@@ -1,0 +1,85 @@
+---
+import Layout from '@layouts/Default.astro';
+import { Pill } from '@eliancodes/brutal-ui';
+import { Button } from '@eliancodes/brutal-ui';
+
+const colors = ['bg-pink', 'bg-blue', 'bg-green', 'bg-yellow', 'bg-purple'];
+const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+---
+
+<Layout
+  title='Emotion Journal'
+  pageTitle=' Emotion Journal'
+  description='Write your thoughts and let us analyze them.'
+>
+  <main class={`${randomColor} p-6 min-h-screen flex flex-col items-center justify-center gap-8`}>
+    <div class='text-5xl font-bold text-center'>
+      Emotion Journal
+    </div>
+
+    <form id="journalForm" class="w-full max-w-lg bg-white p-6 border-4 border-black shadow-brutal">
+      <label for="journalEntry" class="block text-lg font-bold mb-2">Write your journal entry:</label>
+      <textarea
+        id="journalEntry"
+        name="journalEntry"
+        class="w-full h-32 p-4 border-2 border-black resize-none focus:outline-none"
+        placeholder="Type your thoughts here..."
+        required
+      ></textarea>
+      <Button type="button" id="analyzeButton" class="mt-4">Analyze Emotions</Button>
+    </form>
+
+    <div id="emotionResult" class="hidden mt-6 w-full max-w-lg bg-white p-6 border-4 border-black shadow-brutal">
+      <h3 class="text-xl font-bold mb-4">Emotion Analysis</h3>
+      <ul id="emotionList" class="list-disc pl-6"></ul>
+    </div>
+  </main>
+
+  <script>
+    const analyzeButton = document.getElementById('analyzeButton');
+    const journalForm = document.getElementById('journalForm');
+    const emotionResult = document.getElementById('emotionResult');
+    const emotionList = document.getElementById('emotionList');
+
+    analyzeButton.addEventListener('click', async () => {
+      const journalEntry = document.getElementById('journalEntry').value;
+
+      if (!journalEntry.trim()) {
+        alert('Please enter your journal entry.');
+        return;
+      }
+
+      try {
+        // Show loading message
+        analyzeButton.innerText = 'Analyzing...';
+        analyzeButton.disabled = true;
+
+        const { GoogleGenerativeAI } = await import("@google/generative-ai");
+        const genAI = new GoogleGenerativeAI("AIzaSyC6ZO9xlK9OWs4N4GbVttxSeuDMTqMoULc");
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const result = await model.generateContent(`Identify only 2-3 key emotions from this user's journal entry: ${journalEntry}`);
+
+        // Clear previous emotions
+        emotionList.innerHTML = '';
+
+        // Assuming the API response includes key emotions
+        const emotions = result.response.text().split(', ');
+
+        emotions.forEach(emotion => {
+          const li = document.createElement('li');
+          li.textContent = emotion;
+          emotionList.appendChild(li);
+        });
+
+        emotionResult.classList.remove('hidden');
+      } catch (error) {
+        alert('Failed to analyze emotions.');
+      } finally {
+        analyzeButton.innerText = 'Analyze Emotions';
+        analyzeButton.disabled = false;
+      }
+    });
+  </script>
+</Layout>
