@@ -1,0 +1,24 @@
+---
+// src/components/LargeNumber.astro
+const { title, number } = Astro.props;
+---
+
+<div class="bg-white rounded-xl p-6 shadow-lg opacity-0 transform translate-y-4 flex flex-col items-center justify-center" data-animate>
+  <h2 class="text-xl font-semibold mb-2 text-gray-800">{title}</h2>
+  <p class="text-4xl font-bold text-blue-600 text-center">
+    {new Intl.NumberFormat().format(parseInt(number))}
+  </p>
+</div>
+
+<style>
+  [data-animate] {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

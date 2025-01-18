@@ -47,6 +47,14 @@ const loadingMessages = [
 >
   <main class={`${randomColor} min-h-screen flex items-center justify-center p-6`}>
     <div class="max-w-2xl w-full space-y-8">
+      <!-- Loading overlay -->
+      <div class="loading-overlay hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg border-4 border-black shadow-brutal text-center">
+          <div class="animate-spin mb-4 mx-auto w-12 h-12 border-4 border-black border-t-transparent rounded-full"></div>
+          <p class="text-xl font-bold loading-text"></p>
+        </div>
+      </div>
+
       {finalQuestions.map((question, index) => (
         <div 
           class:list={[
@@ -134,6 +142,10 @@ const loadingMessages = [
     }
   }
 
+  .loading-overlay {
+    backdrop-filter: blur(4px);
+  }
+
   .generate-again-btn {
     opacity: 0;
     transform: translateY(10px);
@@ -150,19 +162,35 @@ const loadingMessages = [
 
 <script define:vars={{ API_KEY, loadingMessages }}>
   const answers = {};
-  let isGenerating = false;
+
+  // Function to show loading state
+  function showLoading() {
+    const overlay = document.querySelector('.loading-overlay');
+    const loadingText = document.querySelector('.loading-text');
+    if (overlay && loadingText) {
+      overlay.classList.remove('hidden');
+      loadingText.textContent = loadingMessages[0];
+      
+      let messageIndex = 0;
+      const messageInterval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % loadingMessages.length;
+        loadingText.textContent = loadingMessages[messageIndex];
+      }, 2000);
+
+      return messageInterval;
+    }
+    return null;
+  }
+
+  function hideLoading() {
+    const overlay = document.querySelector('.loading-overlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
+  }
 
   async function generateStory() {
-    if (isGenerating) return; // Prevent multiple submissions
-    isGenerating = true;
-
-    const generateBtn = document.querySelector('.generate-btn');
-    if (generateBtn) {
-      generateBtn.disabled = true;
-      generateBtn.style.opacity = '0.5';
-      generateBtn.textContent = 'Generating...';
-    }
-    
+    const messageInterval = showLoading(); // Show loading overlay
     const storyContainer = document.createElement('div');
     storyContainer.className = 'bg-white p-8 rounded-lg border-4 border-black shadow-brutal mt-8 story-container';
     
@@ -257,6 +285,12 @@ const loadingMessages = [
         mainContainer.innerHTML = '';
         mainContainer.appendChild(storyContainer);
       }
+    } finally {
+      // Ensure loading overlay is hidden
+      if (messageInterval) {
+        clearInterval(messageInterval);
+      }
+      hideLoading(); // Hide loading overlay
     }
   }
 

@@ -1,0 +1,50 @@
+---
+// src/components/DonutChart.astro
+const { title, percentage } = Astro.props;
+const circumference = 2 * Math.PI * 45;
+const strokeDashoffset = circumference - (percentage / 100) * circumference;
+---
+
+<div class="bg-white rounded-xl p-6 shadow-lg opacity-0 transform translate-y-4" data-animate>
+  <h2 class="text-xl font-semibold mb-4 text-gray-800">{title}</h2>
+  <div class="relative w-32 h-32 mx-auto">
+    <svg class="transform -rotate-90 w-32 h-32">
+      <circle
+        cx="64"
+        cy="64"
+        r="45"
+        stroke="#f3f4f6"
+        stroke-width="12"
+        fill="none"
+      />
+      <circle
+        cx="64"
+        cy="64"
+        r="45"
+        stroke="#3b82f6"
+        stroke-width="12"
+        fill="none"
+        stroke-linecap="round"
+        style={`stroke-dasharray: ${circumference}; stroke-dashoffset: ${strokeDashoffset};`}
+        class="transition-all duration-1000 ease-out"
+      />
+    </svg>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <span class="text-3xl font-bold text-gray-800">{percentage}%</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  [data-animate] {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
