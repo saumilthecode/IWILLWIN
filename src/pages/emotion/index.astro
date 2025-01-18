@@ -1,172 +1,198 @@
----
-import Layout from '@layouts/Default.astro';
-
 // Define colors for styling
 const colors = ['bg-pink', 'bg-blue', 'bg-green', 'bg-yellow', 'bg-purple'];
 const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
-// Define game state
-const maxRounds = 8;
+// Define images for the emotion guessing game
 const images = [
-  { src: 'https://i.pinimg.com/736x/fa/e9/6c/fae96c9ae39a45b5e82b8e543b9d0043.jpg', alt: 'Confused', emotion: 'confused', explanation: 'The furrowed brow and questioning expression are typical signs of confusion' },
-  { src: 'https://media.istockphoto.com/id/1045886560/photo/portrait-of-smiling-handsome-man-in-blue-t-shirt-standing-with-crossed-arms-isolated-on-grey.jpg?s=612x612&w=0&k=20&c=TX1-1UJ3PKonFEmgs_WDZf7wtfqKVMHYjeRaYjaZ1Rc=', alt: 'Happy', emotion: 'happy', explanation: 'The wide smile and uplifted eyebrows indicate a positive and cheerful mood' },
-  { src: 'https://img.freepik.com/free-photo/indoor-shot-emotional-curly-haired-young-woman-screams-loudly-keeps-palms-raised-mouth-opened-going-crazy-dressed-casual-green-knitted-sweater-poses-against-pink-background-feels-excited_273609-57240.jpg', alt: 'Excited', emotion: 'excited', explanation: 'The wide open mouth and energetic expression show excitement and enthusiasm' },
-  { src: 'https://i.pinimg.com/736x/36/c3/3e/36c33e3ff7a210fdd48c57a7436cd61d.jpg', alt: 'Surprised', emotion: 'surprised', explanation: 'The wide-open eyes and slightly parted lips indicate surprise or astonishment' },
-  { src: 'https://i.pinimg.com/736x/75/09/cd/7509cd625a684d1544aa7ca2b03809bc.jpg', alt: 'Determined', emotion: 'determined', explanation: 'The furrowed brow and focused expression suggest determination and resolve' },
-  { src: 'https://i.pinimg.com/736x/17/23/95/172395fae6e480ee06ded2e59f4d7934.jpg', alt: 'Angry', emotion: 'angry', explanation: 'The furrowed brow and intense expression indicate anger or frustration' },
-  { src: 'https://i.pinimg.com/736x/79/f1/6a/79f16a489aab154dd0b76b91d078f42b.jpg', alt: 'Sad', emotion: 'sad', explanation: 'The downward-facing mouth and drooping eyebrows suggest sadness or unhappiness' }
+  { src: 'https://i.pinimg.com/736x/fa/e9/6c/fae96c9ae39a45b5e82b8e543b9d0043.jpg', alt: 'Confused', emotion: 'confused' },
+  { src: 'https://media.istockphoto.com/id/1045886560/photo/portrait-of-smiling-handsome-man-in-blue-t-shirt-standing-with-crossed-arms-isolated-on-grey.jpg?s=612x612&w=0&k=20&c=TX1-1UJ3PKonFEmgs_WDZf7wtfqKVMHYjeRaYjaZ1Rc=', alt: 'Happy', emotion: 'happy' },
+  { src: 'https://img.freepik.com/free-photo/indoor-shot-emotional-curly-haired-young-woman-screams-loudly-keeps-palms-raised-mouth-opened-going-crazy-dressed-casual-green-knitted-sweater-poses-against-pink-background-feels-excited_273609-57240.jpg', alt: 'Excited', emotion: 'excited' },
+  { src: 'https://i.pinimg.com/736x/36/c3/3e/36c33e3ff7a210fdd48c57a7436cd61d.jpg', alt: 'Surprised', emotion: 'surprised' },
+  { src: 'https://i.pinimg.com/736x/75/09/cd/7509cd625a684d1544aa7ca2b03809bc.jpg', alt: 'Determined', emotion: 'determined' },
+  { src: 'https://i.pinimg.com/736x/17/23/95/172395fae6e480ee06ded2e59f4d7934.jpg', alt: 'Angry', emotion: 'angry' },
+  { src: 'https://i.pinimg.com/736x/79/f1/6a/79f16a489aab154dd0b76b91d078f42b.jphttps://i.pinimg.com/736x/dc/34/96/dc3496f67e07e8798fc9463e414fb697.jpgg', alt: 'Sad', emotion: 'sad' }
 ];
 ---
+<Layout
+  title='Emotion Game'
+  pageTitle='Stoorybook | Emotion Game'
+  description='Test your emotion recognition skills'
+>
+  <main class={`${randomColor} p-6 min-h-screen flex flex-col items-center gap-8`}>
+    <div class="max-w-7xl mx-auto">
+      <header class="mb-8">
+        <h1 class="text-6xl font-bold text-gray-800 mb-2">Emotion Game</h1>
+        <p class="text-2xl text-gray-600">Test your emotion recognition skills</p>
+      </header>
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <div id="game-container" class="flex flex-col items-center gap-6">
+          <div id="image-container" class="w-96 h-96 relative">
+            <img 
+              id="current-image"
+              src=""
+              alt="Emotion to guess"
+              class="w-full h-full object-cover rounded-lg"
+            />
+          </div>
+          <div id="options-container" class="grid grid-cols-2 gap-4 w-full max-w-xl">
+            <!-- Options will be populated by JS -->
+          </div>
+          <div class="flex gap-4 mt-4">
+            <a href="/" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600">
+              Back to Home
+            </a>
+            <button
+              id="next-round"
+              class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 hidden"
+            >
+              Next Round
+            </button>
+          </div>
+          <div id="score" class="text-xl font-semibold">
+            Score: <span id="correct">0</span>/<span id="total">0</span>
+          </div>
+        </div>
+        <Layout title="Emotion Game">
+          <main class="container mx-auto px-4 py-8">
+            <div class="max-w-2xl mx-auto">
+              <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold mb-4">Guess the Emotion!</h1>
+                <p class="text-xl">Score: <span id="correct">0</span></p>
+              </div>
+              <div class="mb-8">
+                <img
+                  id="emotion-image"
+                  src=""
+                  alt="Emotion"
+                  class="w-full max-w-md mx-auto rounded-lg shadow-lg"
+                />
+              </div>
+              <div id="options-container" class="grid grid-cols-2 gap-4 mb-4">
+                <!-- Options will be dynamically inserted here -->
+              </div>
+              <button
+                id="next-round"
+                class="hidden w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
+              >
+                Next Round
+              </button>
+              <div id="game-over" class="hidden text-center">
+                <h2 class="text-2xl font-bold mb-4">Game Over!</h2>
+                <p class="text-xl mb-4">Final Score: <span id="final-score">0</span></p>
+                <button
+                  onclick="location.reload()"
+                  class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
+                >
+                  Play Again
+                </button>
+              </div>
+            </div>
+          </main>
+          @@ -69,13 +53,13 @@ const images = [
+          let score = 0;
+          const maxRounds = 8;
+          const images = [
+            { src: 'https://i.pinimg.com/736x/fa/e9/6c/fae96c9ae39a45b5e82b8e543b9d0043.jpg', alt: 'Confused', emotion: 'confused',explanation:'The furrowed brow and questioning expression are typical signs of confusion' },
+            { src: 'https://media.istockphoto.com/id/1045886560/photo/portrait-of-smiling-handsome-man-in-blue-t-shirt-standing-with-crossed-arms-isolated-on-grey.jpg?s=612x612&w=0&k=20&c=TX1-1UJ3PKonFEmgs_WDZf7wtfqKVMHYjeRaYjaZ1Rc=', alt: 'Happy', emotion: 'happy', explanation:'The wide smile and uplifted eyebrows indicate a positive and cheerful mood' },
+            { src: 'https://c.stocksy.com/a/p7y400/z9/1184437.jpg', alt: 'Sad', emotion: 'sad', explanation:'The downward-facing mouth and drooping eyebrows suggest a sad or unhappy mood' },
+            { src: 'https://i.pinimg.com/736x/36/c3/3e/36c33e3ff7a210fdd48c57a7436cd61d.jpg', alt: 'Surprised', emotion: 'surprised', explanation:'The wide-open eyes and slightly parted lips indicate surprise or astonishment' },
+            { src: 'https://i.pinimg.com/736x/75/09/cd/7509cd625a684d1544aa7ca2b03809bc.jpg', alt: 'Determined', emotion: 'determined', explanation:'The furrowed brow and uplifted eyebrows suggest a focused and determined mood' },
+            { src: 'https://i.pinimg.com/736x/65/e7/25/65e725cdfbff5c4faa067bd452a1e6cd.jpg', alt: 'Touched', emotion: 'touched', explanation:'The wide-open eyes and slightly parted lips indicate surprise or astonishment' },
+            { src: 'https://i.pinimg.com/736x/79/f1/6a/79f16a489aab154dd0b76b91d078f42b.jpg', alt: 'Sad', emotion: 'sad', explanation:'The downward-facing mouth and drooping eyebrows suggest a sad or unhappy mood' }
+            { src: 'https://i.pinimg.com/736x/fa/e9/6c/fae96c9ae39a45b5e82b8e543b9d0043.jpg', alt: 'Confused', emotion: 'confused', explanation: 'The furrowed brow and questioning expression are typical signs of confusion' },
+            { src: 'https://media.istockphoto.com/id/1045886560/photo/portrait-of-smiling-handsome-man-in-blue-t-shirt-standing-with-crossed-arms-isolated-on-grey.jpg?s=612x612&w=0&k=20&c=TX1-1UJ3PKonFEmgs_WDZf7wtfqKVMHYjeRaYjaZ1Rc=', alt: 'Happy', emotion: 'happy', explanation: 'The wide smile and uplifted eyebrows indicate a positive and cheerful mood' },
+            { src: 'https://img.freepik.com/free-photo/indoor-shot-emotional-curly-haired-young-woman-screams-loudly-keeps-palms-raised-mouth-opened-going-crazy-dressed-casual-green-knitted-sweater-poses-against-pink-background-feels-excited_273609-57240.jpg', alt: 'Excited', emotion: 'excited', explanation: 'The wide open mouth and energetic expression show excitement and enthusiasm' },
+            { src: 'https://i.pinimg.com/736x/36/c3/3e/36c33e3ff7a210fdd48c57a7436cd61d.jpg', alt: 'Surprised', emotion: 'surprised', explanation: 'The wide-open eyes and slightly parted lips indicate surprise or astonishment' },
+            { src: 'https://i.pinimg.com/736x/75/09/cd/7509cd625a684d1544aa7ca2b03809bc.jpg', alt: 'Determined', emotion: 'determined', explanation: 'The furrowed brow and focused expression suggest determination and resolve' },
+            { src: 'https://i.pinimg.com/736x/17/23/95/172395fae6e480ee06ded2e59f4d7934.jpg', alt: 'Angry', emotion: 'angry', explanation: 'The furrowed brow and intense expression indicate anger or frustration' },
+            { src: 'https://i.pinimg.com/736x/79/f1/6a/79f16a489aab154dd0b76b91d078f42b.jpg', alt: 'Sad', emotion: 'sad', explanation: 'The downward-facing mouth and drooping eyebrows suggest sadness or unhappiness' }
+          ];
 
-<Layout title="Emotion Game" description="A game to test your emotion recognition skills">
-  <main class="container mx-auto px-4 py-8">
-    <div class="max-w-2xl mx-auto">
-      <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold mb-4">Guess the Emotion!</h1>
-        <p class="text-xl">Score: <span id="correct">0</span></p>
-      </div>
+          function shuffleArray(array) {
+            @@ -87,42 +71,19 @@ const images = [
+          }
 
-      <div class="mb-8">
-        <img
-          id="emotion-image"
-          src=""
-          alt="Emotion"
-          class="w-full max-w-md mx-auto rounded-lg shadow-lg"
-        />
-      </div>
+          function getRandomOptions(correctEmotion) {
+            const emotions = [...new Set(images.map(img => img.emotion))];
+            const otherEmotions = emotions.filter(e => e !== correctEmotion);
+            const shuffledOthers = shuffleArray([...otherEmotions]);
+            const options = [correctEmotion, ...shuffledOthers.slice(0, 3)];
+            const otherEmotions = images
+              .map(img => img.emotion)
+              .filter(emotion => emotion !== correctEmotion);
+            const shuffledEmotions = shuffleArray([...otherEmotions]);
+            const options = shuffledEmotions.slice(0, 3);
+            options.push(correctEmotion);
+            return shuffleArray(options);
+          }
 
-      <div id="options-container" class="grid grid-cols-2 gap-4 mb-4">
-        <!-- Options will be dynamically inserted here -->
-      </div>
-
-      <div id="feedback" class="hidden text-center mb-4">
-        <p id="feedback-text" class="text-xl font-bold mb-2"></p>
-        <p id="explanation-text" class="text-gray-700"></p>
-        <button
-          id="next-round"
-          class="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
-        >
-          Next Round
-        </button>
-      </div>
-
-      <div id="game-over" class="hidden text-center">
-        <h2 class="text-2xl font-bold mb-4">Game Over!</h2>
-        <p class="text-xl mb-4">Final Score: <span id="final-score">0</span></p>
-        <button
-          onclick="location.reload()"
-          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
-        >
-          Play Again
-        </button>
-      </div>
-    </div>
-  </main>
-</Layout>
-
-<script>
-  interface Image {
-    src: string;
-    alt: string;
-    emotion: string;
-    explanation: string;
-  }
-
-  let currentRound = 0;
-  let score = 0;
-
-  function shuffleArray<T>(array: T[]): T[] {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-
-  function getRandomOptions(correctEmotion: string): string[] {
-    const otherEmotions = (window as any).images
-      .map((img: Image) => img.emotion)
-      .filter((emotion: string) => emotion !== correctEmotion);
-    const shuffledEmotions = shuffleArray([...otherEmotions]);
-    const options = shuffledEmotions.slice(0, 3);
-    options.push(correctEmotion);
-    return shuffleArray(options);
-  }
-
-  function checkAnswer(selected: string, correct: string): void {
-    const buttons = document.querySelectorAll<HTMLButtonElement>('#options-container button');
-    const currentImage = (window as any).images[currentRound];
-    const feedbackDiv = document.getElementById('feedback');
-    const feedbackText = document.getElementById('feedback-text');
-    const explanationText = document.getElementById('explanation-text');
+          function startNewRound() {
+            if (currentRound >= maxRounds) {
+              alert(`Game Over! Final Score: ${score}/${maxRounds}`);
+              return;
+            }
+            const currentImage = images[currentRound];
+            document.getElementById('current-image').src = currentImage.src;
+            document.getElementById('current-image').alt = currentImage.alt;
+            const options = getRandomOptions(currentImage.emotion);
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            options.forEach(option => {
+              const button = document.createElement('button');
+              button.className = 'bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors';
+              button.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+              button.addEventListener('click', () => checkAnswer(option, currentImage.emotion));
+              optionsContainer.appendChild(button);
+            });
+            document.getElementById('next-round').classList.add('hidden');
+            document.getElementById('total').textContent = maxRounds;
+            document.getElementById('correct').textContent = score;
+          }
+          function checkAnswer(selected, correct) {
+            const buttons = document.querySelectorAll('#options-container button');
+            const currentImage = images[currentRound];
     
-    if (!feedbackDiv || !feedbackText || !explanationText) return;
+            buttons.forEach(button => {
+              button.disabled = true;
+              if (button.textContent.toLowerCase() === correct) {
+                @@ -137,12 +98,46 @@ const images = [
+              document.getElementById('correct').textContent = score;
+            }
 
-    buttons.forEach(button => {
-      button.disabled = true;
-      if (button.textContent?.toLowerCase() === selected) {
-        button.classList.add(selected === correct ? 'bg-green-500' : 'bg-red-500', 'text-white');
-      }
-    });
+            // Create and show explanation
+            const explanationDiv = document.createElement('div');
+            explanationDiv.className = 'mt-4 text-gray-700 text-center';
+            explanationDiv.textContent = currentImage.explanation;
+            document.getElementById('options-container').appendChild(explanationDiv);
+            currentRound++;
+            document.getElementById('next-round').classList.remove('hidden');
+          }
 
-    if (selected === correct) {
-      score++;
-      const correctSpan = document.getElementById('correct');
-      if (correctSpan) correctSpan.textContent = score.toString();
-      feedbackText.textContent = 'Correct!';
-      feedbackText.className = 'text-xl font-bold mb-2 text-green-500';
-    } else {
-      feedbackText.textContent = 'Incorrect. The correct answer was: ' + correct;
-      feedbackText.className = 'text-xl font-bold mb-2 text-red-500';
-    }
+          function startNewRound() {
+            if (currentRound >= maxRounds) {
+              document.getElementById('final-score').textContent = score;
+              document.getElementById('game-over').classList.remove('hidden');
+              document.getElementById('next-round').classList.add('hidden');
+              return;
+            }
+            const currentImage = images[currentRound];
+            document.getElementById('emotion-image').src = currentImage.src;
+            document.getElementById('emotion-image').alt = currentImage.alt;
+            const options = getRandomOptions(currentImage.emotion);
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            options.forEach(option => {
+              const button = document.createElement('button');
+              button.textContent = option;
+              button.className =
+                'py-2 px-4 bg-gray-200 rounded hover:bg-gray-300 transition-colors';
+              button.onclick = () => checkAnswer(option, currentImage.emotion);
+              optionsContainer.appendChild(button);
+            });
+            document.getElementById('next-round').classList.add('hidden');
+          }
+          document.getElementById('next-round').addEventListener('click', startNewRound);
 
-    explanationText.textContent = currentImage.explanation;
-    feedbackDiv.classList.remove('hidden');
-
-    const nextRoundBtn = document.getElementById('next-round');
-    if (nextRoundBtn) {
-      nextRoundBtn.onclick = () => {
-        currentRound++;
-        feedbackDiv.classList.add('hidden');
-        startNewRound();
-      };
-    }
-  }
-
-  function startNewRound(): void {
-    if (currentRound >= maxRounds) {
-      const finalScore = document.getElementById('final-score');
-      const gameOver = document.getElementById('game-over');
-      if (finalScore) finalScore.textContent = score.toString();
-      if (gameOver) gameOver.classList.remove('hidden');
-      return;
-    }
-
-    const currentImage = (window as any).images[currentRound];
-    const emotionImage = document.getElementById('emotion-image') as HTMLImageElement;
-    if (emotionImage) {
-      emotionImage.src = currentImage.src;
-      emotionImage.alt = currentImage.alt;
-    }
-
-    const options = getRandomOptions(currentImage.emotion);
-    const optionsContainer = document.getElementById('options-container');
-    if (!optionsContainer) return;
-    
-    optionsContainer.innerHTML = '';
-
-    options.forEach(option => {
-      const button = document.createElement('button');
-      button.textContent = option;
-      button.className = 'py-2 px-4 bg-gray-200 rounded hover:bg-gray-300 transition-colors';
-      button.onclick = () => checkAnswer(option, currentImage.emotion);
-      optionsContainer.appendChild(button);
-    });
-  }
-
-  // Make images available globally
-  (window as any).images = images;
-
-  // Start the first round
-  document.addEventListener('DOMContentLoaded', startNewRound);
-</script>
+          // Start the game
+          // Start the first round
+          startNewRound();
+        </script>
