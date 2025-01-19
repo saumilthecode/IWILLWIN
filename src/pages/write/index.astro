@@ -24,7 +24,7 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
       <textarea
         id="journalEntry"
         name="journalEntry"
-        class="w-full h-32 p-4 border-2 border-black resize-none focus:outline-none"
+        class="w-full h-32 p-6 border-2 border-black resize-none focus:outline-none"
         placeholder="Type your thoughts here..."
         required
       ></textarea>
@@ -59,8 +59,7 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
         const { GoogleGenerativeAI } = await import("@google/generative-ai");
         const genAI = new GoogleGenerativeAI("AIzaSyC6ZO9xlK9OWs4N4GbVttxSeuDMTqMoULc");
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-        const result = await model.generateContent(`Roleplay as the therapist of an individual with ASD(autism). Analyse the content of this journal and give a very brief description of the input.Give it as a paragraph with emojis. no bullet points. dont literally add the stuff u do as a therapist.: ${journalEntry}`);
+        const result = await model.generateContent(`Roleplay as the therapist of an individual with ASD (autism). Analyze the content of this journal and provide a brief, cohesive description of the input. Please write it as a narrative paragraph with emojis, avoiding bullet points or lists. Do not include any literal descriptions of your actions as a therapist. Here is the journal entry: ${journalEntry}`);
 
         // Clear previous emotions
         emotionList.innerHTML = '';
