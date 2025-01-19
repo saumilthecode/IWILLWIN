@@ -40,9 +40,6 @@ const loadingMessages = [
   "Bringing characters to life..."
 ];
 
-// Array to hold images for the storybook
-const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.png"];
-
 ---
 
 <Layout
@@ -128,7 +125,7 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
   margin-bottom: 2rem;
 }
 
-.text-side, .image-side {
+.text-side {
   flex: 1;
   padding: 2rem;
   display: flex;
@@ -148,12 +145,6 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
   margin: 2rem 0;
 }
 
-.image-side img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 0.5rem;
-}
   .shadow-brutal {
     box-shadow: 4px 4px 0 0 #000;
   }
@@ -195,7 +186,7 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
   }
 </style>
 
-<script define:vars={{ API_KEY, loadingMessages, storyImages }}>
+<script define:vars={{ API_KEY, loadingMessages }}>
   const answers = {};
   let isGenerating = false;
 
@@ -213,9 +204,6 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
     const storyContainer = document.createElement('div');
     storyContainer.className = 'bg-white rounded-lg border-4 border-black shadow-brutal mt-8 story-container storybook-container';
     
-//    const storyContent = document.createElement('div');
-//    storyContent.className = 'prose prose-lg max-w-none';
-    
     try {
       console.log('Starting story generation with answers:', answers);
 
@@ -224,7 +212,7 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
       - ${answers[1]}
       - The emotional tone is: ${answers[2]}
       - The character ${answers[3]}
-      Make it engaging and around 3 paragraphs long. Use descriptive language and make it flow naturally.Use emojies frequently. Cap yourself to 200 words`;
+      Make it engaging and around 3 paragraphs long. Use descriptive language and make it flow naturally. Use emojis frequently. Cap yourself to 200 words`;
 
       const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY}`, {
         method: 'POST',
@@ -259,27 +247,12 @@ const storyImages = ["https://cloud-dhbnvawwl-hack-club-bot.vercel.app/0image.pn
       const paragraphs = generatedText.split('\n').filter(para => para.trim());
       
       // Create storybook pages
-      const storyContent = paragraphs.map((para, index) => {
-        const image = storyImages[index];
+      const storyContent = paragraphs.map((para) => {
         return `
           <div class="storybook-page">
-            ${index % 2 === 0 ? `
-              <div class="text-side">
-                <div class="text-content">${para}</div>
-              </div>
-              <div class="divider"></div>
-              <div class="image-side">
-                <img src="${image}" alt="Story image" class="w-full h-full object-cover">
-              </div>
-            ` : `
-              <div class="image-side">
-                <img src="${image}" alt="Story image" class="w-full h-full object-cover">
-              </div>
-              <div class="divider"></div>
-              <div class="text-side">
-                <div class="text-content">${para}</div>
-              </div>
-            `}
+            <div class="text-side">
+              <div class="text-content">${para}</div>
+            </div>
           </div>
         `;
       }).join('');

@@ -60,7 +60,7 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
         const genAI = new GoogleGenerativeAI("AIzaSyC6ZO9xlK9OWs4N4GbVttxSeuDMTqMoULc");
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const result = await model.generateContent(`Roleplay as the therapist of an individual with ASD(autism). Analyse the content of this journal and give a very brief description of the input.: ${journalEntry}`);
+        const result = await model.generateContent(`Roleplay as the therapist of an individual with ASD(autism). Analyse the content of this journal and give a very brief description of the input.Give it as a paragraph with emojis. no bullet points. dont literally add the stuff u do as a therapist.: ${journalEntry}`);
 
         // Clear previous emotions
         emotionList.innerHTML = '';
