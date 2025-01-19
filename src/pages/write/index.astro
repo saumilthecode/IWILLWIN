@@ -67,10 +67,11 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
         // Assuming the API response includes key emotions
         const emotions = result.response.text().split(', ');
 
+        // Use only div elements to display emotions
         emotions.forEach(emotion => {
-          const div = document.createElement('div');
-          div.textContent = emotion;
-          emotionList.appendChild(div);
+          const div = document.createElement('div'); // Create a div for each emotion
+          div.textContent = emotion; // Set the text content to the emotion
+          emotionList.appendChild(div); // Append the div to the emotionList
         });
 
         emotionResult.classList.remove('hidden');
