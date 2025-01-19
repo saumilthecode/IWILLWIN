@@ -24,7 +24,3 @@ Challenges?
 
 We're super proud of every feature we built, actually implementing nearly everything we thought of. While working on this, we learned tons - including an initial 3-hour detour into ASD datasets that taught us about data training, even though we ultimately went a different direction. And our StackOverflow skills? Through the roof!
 
-What's next for Storybook? Well, my cousin brother who has ASD will be our first tester. His feedback, combined with continued research, will help us make it even better.
-
-Would you like me to focus on any particular aspect or add more details about the scientific evidence behind our featu
-
