@@ -1,0 +1,23 @@
+---
+import Layout from '@layouts/Default.astro';
+import RecentBlogPosts from '@components/generic/RecentBlogPosts.astro';
+import MobileSocials from '@components/home/MobileSocials.astro';
+import { Pill } from '@eliancodes/brutal-ui';
+
+const colors = ['bg-pink', 'bg-blue', 'bg-green', 'bg-yellow', 'bg-purple'];
+const randomColor = colors[Math.floor(Math.random() * colors.length)];
+---
+
+<Layout
+  title='3am ahaha'
+  pageTitle='Brutal Theme | 3am ahaha'
+  description='Brutal is a minimalistic, neobrutalism theme for Astro.'
+>
+  <main class={`${randomColor} p-6 min-h-screen flex flex-col items-center justify-center gap-8`}>
+    <div class='text-9xl font-bold text-center animate-bounce'>
+      <span class="text-9xl">3am ahaha</span>
+    </div>
+    
+
+  </main>
+</Layout>
