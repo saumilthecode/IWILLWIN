@@ -6,43 +6,55 @@ const colors = ['bg-pink', 'bg-blue', 'bg-green', 'bg-yellow', 'bg-purple'];
 const randomColor = colors[Math.floor(Math.random() * colors.length)];
 ---
 
-<Layout title="Emotion Game">
-  <main class="container mx-auto px-4 py-8">
-    <div class="max-w-2xl mx-auto">
-      <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold mb-4">Guess the Emotion!</h1>
-        <p class="text-xl">Score: <span id="correct">0</span></p>
-      </div>
+<Layout title="Emotion Game" pageTitle="Storybook | Emotion Game" description="Practice identifying emotions">
+  <main class={`${randomColor} p-6 min-h-screen flex flex-col items-center`}>
+    <div class="max-w-7xl mx-auto w-full">
+      <header class="mb-8 text-center">
+        <h1 class="text-6xl font-bold text-gray-800 mb-2">Emotion Game</h1>
+        <p class="text-2xl text-gray-600">Score: <span id="correct">0</span></p>
+      </header>
 
-      <div class="mb-8">
+      <div class="flex flex-col items-center gap-8">
+        <a href="/" class="text-gray-600 hover:text-gray-800 transition-colors text-lg">
+          &larr; Back to Home
+        </a>
+
         <img
           id="emotion-image"
           src=""
           alt="Emotion"
-          class="w-full max-w-md mx-auto rounded-lg shadow-lg"
+          class="w-full max-w-lg rounded-xl shadow-xl"
         />
-      </div>
 
-      <div id="options-container" class="grid grid-cols-2 gap-4 mb-4">
-        <!-- Options will be dynamically inserted here -->
-      </div>
+        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
+          <!-- Options will be dynamically inserted here -->
+        </div>
 
-      <button
-        id="next-round"
-        class="hidden w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
-      >
-        Next Round
-      </button>
-
-      <div id="game-over" class="hidden text-center">
-        <h2 class="text-2xl font-bold mb-4">Game Over!</h2>
-        <p class="text-xl mb-4">Final Score: <span id="final-score">0</span></p>
         <button
-          onclick="location.reload()"
-          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
+          id="next-round"
+          class="hidden w-full max-w-md bg-blue-500 text-white text-xl font-semibold py-4 px-8 rounded-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
         >
-          Play Again
+          Next Round
         </button>
+
+        <div id="game-over" class="hidden text-center bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl">
+          <h2 class="text-4xl font-bold text-gray-800 mb-4">Game Over!</h2>
+          <p class="text-2xl text-gray-600 mb-6">Final Score: <span id="final-score">0</span></p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onclick="location.reload()"
+              class="w-full sm:w-auto bg-blue-500 text-white text-xl font-semibold py-4 px-8 rounded-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
+            >
+              Play Again
+            </button>
+            <a 
+              href="/"
+              class="w-full sm:w-auto bg-gray-500 text-white text-xl font-semibold py-4 px-8 rounded-lg hover:bg-gray-600 active:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all text-center"
+            >
+              Return Home
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -86,57 +98,65 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
     
     buttons.forEach(button => {
       button.disabled = true;
-      if (button.textContent.toLowerCase() === correct) {
+      if (button.textContent?.toLowerCase() === correct) {
+        button.classList.remove('hover:bg-gray-100', 'active:bg-gray-200');
         button.classList.add('bg-green-500', 'text-white');
-      } else if (button.textContent.toLowerCase() === selected && selected !== correct) {
+      } else if (button.textContent?.toLowerCase() === selected && selected !== correct) {
+        button.classList.remove('hover:bg-gray-100', 'active:bg-gray-200');
         button.classList.add('bg-red-500', 'text-white');
       }
     });
 
     if (selected === correct) {
       score++;
-      document.getElementById('correct').textContent = score;
+      const scoreElement = document.getElementById('correct');
+      if (scoreElement) scoreElement.textContent = score.toString();
     }
 
     // Create and show explanation
     const explanationDiv = document.createElement('div');
-    explanationDiv.className = 'mt-4 text-gray-700 text-center';
+    explanationDiv.className = 'mt-6 text-xl text-gray-700 text-center bg-white p-4 rounded-lg shadow';
     explanationDiv.textContent = currentImage.explanation;
-    document.getElementById('options-container').appendChild(explanationDiv);
+    document.getElementById('options-container')?.appendChild(explanationDiv);
 
     currentRound++;
-    document.getElementById('next-round').classList.remove('hidden');
+    document.getElementById('next-round')?.classList.remove('hidden');
   }
 
   function startNewRound() {
     if (currentRound >= maxRounds) {
-      document.getElementById('final-score').textContent = score;
-      document.getElementById('game-over').classList.remove('hidden');
-      document.getElementById('next-round').classList.add('hidden');
+      const finalScore = document.getElementById('final-score');
+      if (finalScore) finalScore.textContent = score.toString();
+      document.getElementById('game-over')?.classList.remove('hidden');
+      document.getElementById('next-round')?.classList.add('hidden');
       return;
     }
 
     const currentImage = images[currentRound];
-    document.getElementById('emotion-image').src = currentImage.src;
-    document.getElementById('emotion-image').alt = currentImage.alt;
+    const imageElement = document.getElementById('emotion-image') as HTMLImageElement;
+    if (imageElement) {
+      imageElement.src = currentImage.src;
+      imageElement.alt = currentImage.alt;
+    }
 
     const options = getRandomOptions(currentImage.emotion);
     const optionsContainer = document.getElementById('options-container');
-    optionsContainer.innerHTML = '';
+    if (optionsContainer) {
+      optionsContainer.innerHTML = '';
 
-    options.forEach(option => {
-      const button = document.createElement('button');
-      button.textContent = option;
-      button.className =
-        'py-2 px-4 bg-gray-200 rounded hover:bg-gray-300 transition-colors';
-      button.onclick = () => checkAnswer(option, currentImage.emotion);
-      optionsContainer.appendChild(button);
-    });
+      options.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = option;
+        button.className = 'w-full bg-white text-xl font-medium text-gray-800 py-4 px-6 rounded-lg shadow hover:bg-gray-100 active:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-all';
+        button.onclick = () => checkAnswer(option, currentImage.emotion);
+        optionsContainer.appendChild(button);
+      });
+    }
 
-    document.getElementById('next-round').classList.add('hidden');
+    document.getElementById('next-round')?.classList.add('hidden');
   }
 
-  document.getElementById('next-round').addEventListener('click', startNewRound);
+  document.getElementById('next-round')?.addEventListener('click', startNewRound);
 
   // Start the first round
   startNewRound();
