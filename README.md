@@ -1,4 +1,4 @@
- Storybook: A Platform for ASD Social Skills Practice
+Storybook: A Platform for ASD Social Skills Practice
 
 You would think that by 2025 we would have leveraged tech better to help individuals with ASD practice their social skills. Over 75,000,000 people (1% of the population) are diagnosed with ASD, yet digital support tools remain limited.
 
