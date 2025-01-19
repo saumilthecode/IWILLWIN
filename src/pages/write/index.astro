@@ -68,10 +68,6 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
         const emotions = result.response.text().split(', ');
 
         emotions.forEach(emotion => {
-          const li = document.createElement('li');
-          li.textContent = emotion;
-          emotionList.appendChild(li);
-
           const div = document.createElement('div');
           div.textContent = emotion;
           emotionList.appendChild(div);
