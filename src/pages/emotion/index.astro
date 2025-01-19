@@ -1,21 +1,19 @@
----
-import Layout from '@layouts/Default.astro';
-// Define colors for styling
-const colors = ['bg-pink', 'bg-blue', 'bg-green', 'bg-yellow', 'bg-purple'];
-const randomColor = colors[Math.floor(Math.random() * colors.length)];
-// Define images for the emotion guessing game
 const images = [
-  { src: 'https://i.pinimg.com/736x/fa/e9/6c/fae96c9ae39a45b5e82b8e543b9d0043.jpg', alt: 'Confused', emotion: 'confused', explanation: 'The furrowed brow and questioning expression are typical signs of confusion' },
-  { src: 'https://media.istockphoto.com/id/1045886560/photo/portrait-of-smiling-handsome-man-in-blue-t-shirt-standing-with-crossed-arms-isolated-on-grey.jpg?s=612x612&w=0&k=20&c=TX1-1UJ3PKonFEmgs_WDZf7wtfqKVMHYjeRaYjaZ1Rc=', alt: 'Happy', emotion: 'happy', explanation: 'The wide smile and uplifted eyebrows indicate a positive and cheerful mood' },
-  { src: 'https://c.stocksy.com/a/p7y400/z9/1184437.jpg', alt: 'Sad', emotion: 'sad', explanation: 'The downward-facing mouth and drooping eyebrows suggest a sad or unhappy mood' },
-  { src: 'https://i.pinimg.com/736x/36/c3/3e/36c33e3ff7a210fdd48c57a7436cd61d.jpg', alt: 'Surprised', emotion: 'surprised', explanation: 'The wide-open eyes and slightly parted lips indicate surprise or astonishment' },
-  { src: 'https://i.pinimg.com/736x/75/09/cd/7509cd625a684d1544aa7ca2b03809bc.jpg', alt: 'Determined', emotion: 'determined', explanation: 'The furrowed brow and uplifted eyebrows suggest a focused and determined mood' },
-  { src: 'https://i.pinimg.com/736x/65/e7/25/65e725cdfbff5c4faa067bd452a1e6cd.jpg', alt: 'Touched', emotion: 'touched', explanation: 'The wide-open eyes and slightly parted lips indicate surprise or astonishment' },
-  { src: 'https://i.pinimg.com/736x/79/f1/6a/79f16a489aab154dd0b76b91d078f42b.jpg', alt: 'Sad', emotion: 'sad', explanation: 'The downward-facing mouth and drooping eyebrows suggest a sad or unhappy mood' }
+    { src: 'https://i.pinimg.com/736x/fa/e9/6c/fae96c9ae39a45b5e82b8e543b9d0043.jpg', alt: 'Confused', emotion: 'confused' },
+    { src: 'https://media.istockphoto.com/id/1045886560/photo/portrait-of-smiling-handsome-man-in-blue-t-shirt-standing-with-crossed-arms-isolated-on-grey.jpg?s=612x612&w=0&k=20&c=TX1-1UJ3PKonFEmgs_WDZf7wtfqKVMHYjeRaYjaZ1Rc=', alt: 'Happy', emotion: 'happy' },
+    { src: 'https://c.stocksy.com/a/p7y400/z9/1184437.jpg', alt: 'Sad', emotion: 'sad' },
+    { src: 'https://img.freepik.com/free-photo/indoor-shot-emotional-curly-haired-young-woman-screams-loudly-keeps-palms-raised-mouth-opened-going-crazy-dressed-casual-green-knitted-sweater-poses-against-pink-background-feels-excited_273609-57240.jpg', alt: 'Excited', emotion: 'excited' },
+    { src: 'https://i.pinimg.com/736x/36/c3/3e/36c33e3ff7a210fdd48c57a7436cd61d.jpg', alt: 'Surprised', emotion: 'surprised' },
+    { src: 'https://i.pinimg.com/736x/75/09/cd/7509cd625a684d1544aa7ca2b03809bc.jpg', alt: 'Determined', emotion: 'determined' },
+    { src: 'https://i.pinimg.com/736x/65/e7/25/65e725cdfbff5c4faa067bd452a1e6cd.jpg', alt: 'Touched', emotion: 'touched' },
+    { src: 'https://i.pinimg.com/736x/79/f1/6a/79f16a489aab154dd0b76b91d078f42b.jpg', alt: 'Sad', emotion: 'sad' }
+    { src: 'https://i.pinimg.com/736x/17/23/95/172395fae6e480ee06ded2e59f4d7934.jpg', alt: 'Angry', emotion: 'angry' },
+    { src: 'https://i.pinimg.com/736x/79/f1/6a/79f16a489aab154dd0b76b91d078f42b.jphttps://i.pinimg.com/736x/dc/34/96/dc3496f67e07e8798fc9463e414fb697.jpgg', alt: 'Sad', emotion: 'sad' }
 ];
 ---
 <Layout
   title='Emotion Game'
+  pageTitle='Emotion Game'
   pageTitle='Stoorybook | Emotion Game'
   description='Test your emotion recognition skills'
 >
@@ -26,33 +24,39 @@ const images = [
           <h1 class="text-4xl font-bold text-gray-800 mb-4">Emotion Recognition Game</h1>
           <p class="text-xl text-gray-600">Can you guess the emotion shown in the image?</p>
         </div>
+  <main class={`${randomColor} p-6 min-h-screen flex flex-col items-center gap-8`}>
+    <div class="max-w-7xl mx-auto">
+      <header class="mb-8">
+        <h1 class="text-6xl font-bold text-gray-800 mb-2">Emotion Game</h1>
+        <p class="text-2xl text-gray-600">Test your emotion recognition skills</p>
+      </header>
+
+      <div class="bg-white rounded-lg shadow-lg p-8">
         <div id="game-container" class="flex flex-col items-center gap-6">
           <div id="image-container" class="w-96 h-96 relative">
-            <img />
-          </div>
-          
-          <div id="buttons-container" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <button class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-              Happy
-            </button>
-            <button class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-              Sad
-            </button>
-            <button class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-              Surprised
-            </button>
-            <button class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-              Confused
-            </button>
-            <button class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-              Determined
-            </button>
-            <button class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-              Touched
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-</Layout>
+            <img 
+@@ -69,13 +69,13 @@ const images = [
+  let score = 0;
+  const maxRounds = 8;
+  const images = [
+    { src: 'https://i.pinimg.com/736x/fa/e9/6c/fae96c9ae39a45b5e82b8e543b9d0043.jpg', alt: 'Confused', emotion: 'confused' },
+    { src: 'https://media.istockphoto.com/id/1045886560/photo/portrait-of-smiling-handsome-man-in-blue-t-shirt-standing-with-crossed-arms-isolated-on-grey.jpg?s=612x612&w=0&k=20&c=TX1-1UJ3PKonFEmgs_WDZf7wtfqKVMHYjeRaYjaZ1Rc=', alt: 'Happy', emotion: 'happy' },
+    { src: 'https://c.stocksy.com/a/p7y400/z9/1184437.jpg', alt: 'Sad', emotion: 'sad' },
+    { src: 'https://i.pinimg.com/736x/36/c3/3e/36c33e3ff7a210fdd48c57a7436cd61d.jpg', alt: 'Surprised', emotion: 'surprised' },
+    { src: 'https://i.pinimg.com/736x/75/09/cd/7509cd625a684d1544aa7ca2b03809bc.jpg', alt: 'Determined', emotion: 'determined' },
+    { src: 'https://i.pinimg.com/736x/65/e7/25/65e725cdfbff5c4faa067bd452a1e6cd.jpg', alt: 'Touched', emotion: 'touched' },
+    { src: 'https://i.pinimg.com/736x/79/f1/6a/79f16a489aab154dd0b76b91d078f42b.jpg', alt: 'Sad', emotion: 'sad' }
+    { src: 'https://i.pinimg.com/736x/fa/e9/6c/fae96c9ae39a45b5e82b8e543b9d0043.jpg', alt: 'Confused', emotion: 'confused',explanation:'The furrowed brow and questioning expression are typical signs of confusion' },
+    { src: 'https://media.istockphoto.com/id/1045886560/photo/portrait-of-smiling-handsome-man-in-blue-t-shirt-standing-with-crossed-arms-isolated-on-grey.jpg?s=612x612&w=0&k=20&c=TX1-1UJ3PKonFEmgs_WDZf7wtfqKVMHYjeRaYjaZ1Rc=', alt: 'Happy', emotion: 'happy', explanation:'The wide smile and uplifted eyebrows indicate a positive and cheerful mood' },
+    { src: 'https://c.stocksy.com/a/p7y400/z9/1184437.jpg', alt: 'Sad', emotion: 'sad', explanation:'The downward-facing mouth and drooping eyebrows suggest a sad or unhappy mood' },
+    { src: 'https://i.pinimg.com/736x/36/c3/3e/36c33e3ff7a210fdd48c57a7436cd61d.jpg', alt: 'Surprised', emotion: 'surprised', explanation:'The wide-open eyes and slightly parted lips indicate surprise or astonishment' },
+    { src: 'https://i.pinimg.com/736x/75/09/cd/7509cd625a684d1544aa7ca2b03809bc.jpg', alt: 'Determined', emotion: 'determined', explanation:'The furrowed brow and uplifted eyebrows suggest a focused and determined mood' },
+    { src: 'https://i.pinimg.com/736x/65/e7/25/65e725cdfbff5c4faa067bd452a1e6cd.jpg', alt: 'Touched', emotion: 'touched', explanation:'The wide-open eyes and slightly parted lips indicate surprise or astonishment' },
+    { src: 'https://i.pinimg.com/736x/79/f1/6a/79f16a489aab154dd0b76b91d078f42b.jpg', alt: 'Sad', emotion: 'sad', explanation:'The downward-facing mouth and drooping eyebrows suggest a sad or unhappy mood' }
+  ];
+
+  function shuffleArray(array) {
+@@ -146,4 +146,3 @@ const images = [
+  // Start the game
+  startNewRound();
+</script>
