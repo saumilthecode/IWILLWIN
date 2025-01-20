@@ -15,12 +15,7 @@ The **Emotion** tab helps build emotion recognition skills through quizzes. It s
 
 ### Storybook aims to boost cognitive skills using scientifically-proven methods - from generating engaging stories to live journaling with emotional analysis to facial expression training. We even include a dashboard for tracking progress.
 
-Tech Stack:
 We built this using ASTRO (the cleanest, swiftest and most fun!) with TypeScript, JavaScript, and CSS. We integrated the Gemini Flash 1.5 API (thanks for the generous credits!) and attempted text-to-speech (whether it works... that's another story 😅). Freeform helped us prototype without endless code rewrites.
 
-Challenges? 
-- Multitasking between lectures and debugging -_-
-- That fun hour when everything except the buttons showed up (but teamwork and StackOverflow got us through!)
 
-We're super proud of every feature we built, actually implementing nearly everything we thought of. While working on this, we learned tons - including an initial 3-hour detour into ASD datasets that taught us about data training, even though we ultimately went a different direction. And our StackOverflow skills? Through the roof!
 
