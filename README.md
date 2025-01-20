@@ -19,3 +19,5 @@ We built this using ASTRO (the cleanest, swiftest and most fun!) with TypeScript
 
 
 
+https://waka.hackclub.com/api/badge/U078K08NN2Y/interval:any/project:IWILLWIN
+
