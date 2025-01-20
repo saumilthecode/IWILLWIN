@@ -15,9 +15,7 @@ The **Emotion** tab helps build emotion recognition skills through quizzes. It s
 
 ### Storybook aims to boost cognitive skills using scientifically-proven methods - from generating engaging stories to live journaling with emotional analysis to facial expression training. We even include a dashboard for tracking progress.
 
-We built this using ASTRO (the cleanest, swiftest and most fun!) with TypeScript, JavaScript, and CSS. We integrated the Gemini Flash 1.5 API (thanks for the generous credits!) and attempted text-to-speech (whether it works... that's another story 😅). Freeform helped us prototype without endless code rewrites.
+We built this using Astro (shiny design hahhaha) with TypeScript, JavaScript, and CSS. We integrated the Gemini Flash 1.5 API and attempted text-to-speech (whether it works... that's another story 😅).
 
 
-
-[](!https://waka.hackclub.com/api/badge/U078K08NN2Y/interval:any/project:IWILLWIN)
-
+![](https://waka.hackclub.com/api/badge/U078K08NN2Y/interval:any/project:IWILLWIN)
