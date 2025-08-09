@@ -5,7 +5,7 @@ Available at: [**unfound.cloud**](https://www.unfound.cloud/) 🥰
 ---
 
 ## **Overview**
-By 2025, you’d think we would have leveraged technology better !!! to help individuals with **Autism Spectrum Disorder (ASD)** practice their social skills!!!  
+By 2025, you’d think we would have leveraged technology better!!! to help individuals with **Autism Spectrum Disorder (ASD)** practice their social skills!!!  
 Over **75 million people** (~1% of the population)!!! are diagnosed with ASD, yet digital support tools remain limited!  
 
 We read a ton of research articles from universities like Stanford, John Hopkins, Harvard Med and so many many more and realised individuals with ASD often struggle to form **meaningful social connections** due to challenges such as:  
