@@ -17,7 +17,7 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
   description='Brutal is a minimalistic, neobrutalism theme for Astro.'
 >
   <main class={`${randomColor} p-6 min-h-screen flex flex-col items-center justify-center gap-8`}>
-    <div class='text-9xl font-bold text-center animate-bounce'>
+    <div class='text-9xl font-bold text-center slow-bounce'>
       Stoorybook
     </div>
     
@@ -37,3 +37,18 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
     </div>
   </main>
 </Layout>
+
+<style>
+  .slow-bounce {
+    animation: slow-bounce 5s ease-in-out infinite;
+  }
+  
+  @keyframes slow-bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+</style>

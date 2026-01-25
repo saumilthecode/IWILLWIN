@@ -1,0 +1,148 @@
+---
+// src/components/ContextBackground.astro
+---
+
+<!-- Emoji overlay layer that masks the background -->
+<div id="context-background" class="emoji-overlay fixed inset-0 pointer-events-none" style="z-index: 1;">
+  <!-- Emojis will be dynamically inserted here -->
+</div>
+
+<script>
+  async function getActiveContext() {
+    const active = localStorage.getItem('activeContext');
+    return active ? JSON.parse(active) : null;
+  }
+  
+  function createEmojiBackground(context) {
+    const container = document.getElementById('context-background');
+    if (!container) return;
+    
+    // Clear existing emojis with fade out
+    container.style.opacity = '0';
+    setTimeout(() => {
+      container.innerHTML = '';
+      
+      if (!context || !context.emojis || context.emojis.length === 0) {
+        container.style.opacity = '0';
+        return;
+      }
+      
+      // Create floating emojis - more emojis for topics mentioned more frequently
+      const mentionCount = context.mentionCount || 2;
+      const emojiCount = Math.min(30 + (mentionCount * 10), 80); // Scale with mentions, max 80
+      const emojis = context.emojis;
+      
+      // Create a mask effect with emojis
+      for (let i = 0; i < emojiCount; i++) {
+        const emoji = document.createElement('div');
+        emoji.className = 'emoji-float';
+        emoji.textContent = emojis[i % emojis.length];
+        
+        // Vary sizes based on mention frequency
+        const baseSize = 24;
+        const sizeVariation = mentionCount > 3 ? 40 : 30;
+        const fontSize = Math.random() * sizeVariation + baseSize;
+        
+        emoji.style.cssText = `
+          position: absolute;
+          font-size: ${fontSize}px;
+          left: ${Math.random() * 100}%;
+          top: ${Math.random() * 100}%;
+          animation: float ${Math.random() * 15 + 10}s infinite ease-in-out;
+          animation-delay: ${Math.random() * 5}s;
+          opacity: ${Math.random() * 0.4 + 0.2};
+          filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        `;
+        container.appendChild(emoji);
+      }
+      
+      // Fade in the new emojis
+      container.style.opacity = '1';
+    }, 300);
+  }
+  
+  // Load context on page load
+  async function initBackground() {
+    const activeContext = await getActiveContext();
+    if (activeContext) {
+      createEmojiBackground(activeContext);
+    }
+  }
+  
+  // Wait for DOM to be ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBackground);
+  } else {
+    initBackground();
+  }
+  
+  // Listen for context updates from other tabs
+  window.addEventListener('storage', async (e) => {
+    if (e.key === 'activeContext') {
+      if (e.newValue) {
+        const newContext = JSON.parse(e.newValue);
+        createEmojiBackground(newContext);
+      } else {
+        // Context cleared
+        const container = document.getElementById('context-background');
+        if (container) {
+          container.style.opacity = '0';
+          setTimeout(() => container.innerHTML = '', 300);
+        }
+      }
+    }
+  });
+  
+  // Listen for custom event for same-tab updates
+  window.addEventListener('activeContextUpdated', async () => {
+    const newContext = await getActiveContext();
+    if (newContext) {
+      createEmojiBackground(newContext);
+    } else {
+      // Context cleared
+      const container = document.getElementById('context-background');
+      if (container) {
+        container.style.opacity = '0';
+        setTimeout(() => container.innerHTML = '', 300);
+      }
+    }
+  });
+  
+  // Also listen for the old event name for backwards compatibility
+  window.addEventListener('contextUpdated', async () => {
+    const newContext = await getActiveContext();
+    if (newContext) {
+      createEmojiBackground(newContext);
+    }
+  });
+</script>
+
+<style>
+  .emoji-overlay {
+    background: transparent;
+    transition: opacity 0.3s ease-in-out;
+    mix-blend-mode: overlay;
+    opacity: 0;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    25% {
+      transform: translate(30px, -30px) rotate(8deg) scale(1.1);
+    }
+    50% {
+      transform: translate(-30px, 30px) rotate(-8deg) scale(0.9);
+    }
+    75% {
+      transform: translate(30px, 30px) rotate(5deg) scale(1.05);
+    }
+  }
+  
+  .emoji-float {
+    user-select: none;
+    pointer-events: none;
+    will-change: transform;
+  }
+</style>

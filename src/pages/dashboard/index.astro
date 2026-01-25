@@ -1,10 +1,30 @@
 ---
 import Layout from '@layouts/Default.astro';
-import DonutChart from 'src/components/DonutChart.astro';
 import LargeNumber from 'src/components/LargeNumber.astro';
 
 const colors = ['bg-pink', 'bg-blue', 'bg-green', 'bg-yellow', 'bg-purple'];
 const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+// Sample data - replace with real data from localStorage or API
+const dashboardData = {
+  completionRate: 75,
+  storiesGenerated: 40,
+  emotionsSolved: 23,
+  weeklyProgress: [
+    { label: "Mon", y: 60 },
+    { label: "Tue", y: 75 },
+    { label: "Wed", y: 80 },
+    { label: "Thu", y: 70 },
+    { label: "Fri", y: 85 },
+    { label: "Sat", y: 90 },
+    { label: "Sun", y: 75 }
+  ],
+  activityBreakdown: [
+    { y: 45, label: "Read" },
+    { y: 30, label: "Write" },
+    { y: 25, label: "Emotion" }
+  ]
+};
 ---
 
 <Layout
@@ -13,24 +33,140 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
   description='Dashboard page'
 >
   <main class={`${randomColor} p-6 min-h-screen flex flex-col items-center gap-8`}>
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto w-full">
       <header class="mb-8">
         <h1 class="text-6xl font-bold text-gray-800 mb-2">Dashboard</h1>
         <p class="text-2xl text-gray-600">Welcome to your Storybook analytics</p>
       </header>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <DonutChart title="Completion Rate for Today" percentage={75} />
-        <LargeNumber title="Stories Generated" number="40" />
-        <LargeNumber title="Emotions Solved" number="23" />
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <LargeNumber title="Stories Generated" number={dashboardData.storiesGenerated.toString()} />
+        <LargeNumber title="Emotions Solved" number={dashboardData.emotionsSolved.toString()} />
+        <div id="completionChart" class="bg-white rounded-xl p-6 shadow-lg border-4 border-black"></div>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div id="weeklyChart" class="bg-white rounded-xl p-6 shadow-lg border-4 border-black"></div>
+        <div id="activityChart" class="bg-white rounded-xl p-6 shadow-lg border-4 border-black"></div>
       </div>
     </div>
   </main>
 </Layout>
 
-<style is:global>
-  /* Add any global styles here */
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+<script is:inline>
+  // Load CanvasJS and initialize charts
+  (function() {
+    function loadCanvasJS() {
+      if (window.CanvasJS) {
+        initCharts();
+        return;
+      }
+      
+      const script = document.createElement('script');
+      script.src = 'https://cdn.canvasjs.com/canvasjs.min.js';
+      script.onload = initCharts;
+      document.head.appendChild(script);
+    }
+    
+    function initCharts() {
+      // Completion Rate Donut Chart
+      const completionChart = new CanvasJS.Chart("completionChart", {
+        animationEnabled: true,
+        title: {
+          text: "Completion Rate",
+          fontSize: 20,
+          fontFamily: "Arial Black",
+          fontWeight: "bold"
+        },
+        data: [{
+          type: "doughnut",
+          startAngle: 270,
+          innerRadius: 60,
+          indexLabelFontSize: 17,
+          indexLabel: "{label} - {y}%",
+          toolTipContent: "<b>{label}:</b> {y}%",
+          dataPoints: [
+            { y: 75, label: "Completed", color: "#3b82f6" },
+            { y: 25, label: "Remaining", color: "#e5e7eb" }
+          ]
+        }]
+      });
+      completionChart.render();
+      
+      // Weekly Progress Chart
+      const weeklyChart = new CanvasJS.Chart("weeklyChart", {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+          text: "Weekly Progress",
+          fontSize: 20,
+          fontFamily: "Arial Black",
+          fontWeight: "bold"
+        },
+        axisY: {
+          title: "Completion %",
+          maximum: 100,
+          gridColor: "#e5e7eb",
+          gridThickness: 1
+        },
+        axisX: {
+          gridColor: "#e5e7eb",
+          gridThickness: 1
+        },
+        data: [{
+          type: "column",
+          color: "#3b82f6",
+          indexLabel: "{y}%",
+          indexLabelPlacement: "outside",
+          dataPoints: [
+            { label: "Mon", y: 60 },
+            { label: "Tue", y: 75 },
+            { label: "Wed", y: 80 },
+            { label: "Thu", y: 70 },
+            { label: "Fri", y: 85 },
+            { label: "Sat", y: 90 },
+            { label: "Sun", y: 75 }
+          ]
+        }]
+      });
+      weeklyChart.render();
+      
+      // Activity Breakdown Pie Chart
+      const activityChart = new CanvasJS.Chart("activityChart", {
+        animationEnabled: true,
+        title: {
+          text: "Activity Breakdown",
+          fontSize: 20,
+          fontFamily: "Arial Black",
+          fontWeight: "bold"
+        },
+        data: [{
+          type: "pie",
+          startAngle: 240,
+          yValueFormatString: "##0\"%\"",
+          indexLabel: "{label} {y}",
+          dataPoints: [
+            { y: 45, label: "Read", color: "#ffc0cb" },
+            { y: 30, label: "Write", color: "#87ceeb" },
+            { y: 25, label: "Emotion", color: "#98fb98" }
+          ]
+        }]
+      });
+      activityChart.render();
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadCanvasJS);
+    } else {
+      loadCanvasJS();
+    }
+  })();
+</script>
+
+<style>
+  #completionChart,
+  #weeklyChart,
+  #activityChart {
+    min-height: 300px;
+  }
 </style>

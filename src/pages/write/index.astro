@@ -1,7 +1,6 @@
 ---
 import Layout from '@layouts/Default.astro';
 import { Pill } from '@eliancodes/brutal-ui';
-import { Button } from '@eliancodes/brutal-ui';
 
 const colors = ['bg-pink', 'bg-blue', 'bg-green', 'bg-yellow', 'bg-purple'];
 const randomColor = colors[Math.floor(Math.random() * colors.length)];
@@ -28,7 +27,7 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
         placeholder="Type your thoughts here..."
         required
       ></textarea>
-      <Button type="button" id="analyzeButton" class="mt-4">Analyze Emotions</Button>
+      <button type="button" id="analyzeButton" class="mt-4 w-full px-6 py-3 bg-black text-white border-4 border-black shadow-brutal hover:bg-gray-800 transition-colors font-bold text-lg">Analyze Emotions</button>
     </form>
 
     <div id="emotionResult" class="hidden mt-6 w-full max-w-lg bg-white p-6 border-4 border-black shadow-brutal">
@@ -56,23 +55,45 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
         analyzeButton.innerText = 'Analyzing...';
         analyzeButton.disabled = true;
 
+        // Detect context from journal entry
+        const { detectUserContext, saveUserContext } = await import('../../utils/contextDetector.js');
+        const context = await detectUserContext(journalEntry);
+        if (context && context.confidence === 'high') {
+          saveUserContext(context);
+          // Trigger update event
+          window.dispatchEvent(new CustomEvent('contextUpdated'));
+        }
+
         const { GoogleGenerativeAI } = await import("@google/generative-ai");
         const genAI = new GoogleGenerativeAI("AIzaSyB1YnVEN2iAEl4DprbHIq_DkRkoJSxPUns");
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-        const result = await model.generateContent(`Roleplay as the therapist of an individual with ASD (autism). Analyze the content of this journal and provide a brief, cohesive description of the input. Please write it as a narrative paragraph with emojis, do not use bullet points or lists. Do not include any literal descriptions of your actions as a therapist. Here is the journal entry: ${journalEntry}`);
+        const result = await model.generateContent(`Roleplay as an AI therapist assistant for an individual with ASD (autism). Analyze the content of this journal entry and provide a thoughtful, empathetic response. Write it as if an AI wrote it - be warm, understanding, and supportive. Use natural language with emojis. Write it as a cohesive paragraph, not bullet points. Do not mention that you are a therapist or AI. Here is the journal entry: ${journalEntry}`);
 
         // Clear previous emotions
         emotionList.innerHTML = '';
 
-        // Assuming the API response includes key emotions
-        const emotions = result.response.text().split(', ');
-
-        // Use only div elements to display emotions
-        emotions.forEach(emotion => {
-          const div = document.createElement('div'); // Create a div for each emotion
-          div.textContent = emotion; // Set the text content to the emotion
-          emotionList.appendChild(div); // Append the div to the emotionList
-        });
+        // Get the full AI response
+        const aiResponse = result.response.text();
+        
+        // Display the AI response with typing effect
+        const responseDiv = document.createElement('div');
+        responseDiv.className = 'ai-response text-lg leading-relaxed';
+        emotionList.appendChild(responseDiv);
+        
+        // Type out the response character by character for AI-like effect
+        let charIndex = 0;
+        responseDiv.classList.add('typing'); // Add typing class for cursor
+        const typingInterval = setInterval(() => {
+          if (charIndex < aiResponse.length) {
+            responseDiv.textContent = aiResponse.substring(0, charIndex + 1);
+            charIndex++;
+            // Scroll to bottom
+            responseDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          } else {
+            clearInterval(typingInterval);
+            responseDiv.classList.remove('typing'); // Remove cursor when done
+          }
+        }, 20); // 20ms per character for natural typing speed
 
         emotionResult.classList.remove('hidden');
       } catch (error) {
@@ -84,3 +105,24 @@ const randomColor = colors[Math.floor(Math.random() * colors.length)];
     });
   </script>
 </Layout>
+
+<style>
+  .ai-response {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #333;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  
+  .ai-response.typing::after {
+    content: '▊';
+    animation: blink 1s infinite;
+    color: #666;
+  }
+  
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+</style>

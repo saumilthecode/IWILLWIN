@@ -2,6 +2,7 @@
 import BaseNavigation from '@components/layout/BaseNavigation.astro';
 import BaseFooter from '@components/layout/BaseFooter.astro';
 import BaseHead from '../components/layout/BaseHead.astro';
+import ContextBackground from '@components/ContextBackground.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -19,8 +20,11 @@ const { title, description, classList, pageTitle, ogImage } = Astro.props;
   <BaseHead ogImage={ogImage} title={title} description={description} />
 
   <body class:list={[classList]}>
-    <BaseNavigation {pageTitle} />
-    <slot />
-    <BaseFooter />
+    <ContextBackground />
+    <div style="position: relative; z-index: 1;">
+      <BaseNavigation {pageTitle} />
+      <slot />
+      <BaseFooter />
+    </div>
   </body>
 </html>

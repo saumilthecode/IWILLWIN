@@ -1,6 +1,6 @@
 # **Storybook: A Platform for ASD Social Skills Practice**  
 🏆 *Winner – Most Socially Useful Hack*  
-Available at: [**unfound.cloud**](https://www.unfound.cloud/) 🥰  
+Available at: [**unfound.cloud**](https://www.unfound.cloud/) 🥰  api key removed
 
 ---
 
@@ -20,7 +20,7 @@ Therapy happens once or twice a week, we bring it to you everyday.
 ## **Our Solution: Storybook**
 **Storybook** is built on *scientific evidence* and designed to help users develop social skills in a safe, engaging, and personalized way.  
 
-We developed **three core components** after extensive research:  
+**3 core components** 
 
 ### **1. Read**
 - Create your own story and answer guided follow-up questions to process the narrative.  

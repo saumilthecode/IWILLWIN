@@ -207,6 +207,27 @@ const loadingMessages = [
     try {
       console.log('Starting story generation with answers:', answers);
 
+      // Collect all answers into a single string for context detection
+      const allAnswers = Object.values(answers).join(' ');
+      
+      // Detect context from story inputs (non-blocking, don't wait if it fails)
+      try {
+        const { detectUserContext, saveUserContext } = await import('../../utils/contextDetector.js');
+        const context = await detectUserContext(allAnswers);
+        if (context && context.confidence === 'high') {
+          saveUserContext(context);
+          window.dispatchEvent(new CustomEvent('contextUpdated'));
+        }
+      } catch (contextError) {
+        console.warn('Context detection failed, continuing anyway:', contextError);
+        // Continue with story generation even if context detection fails
+      }
+
+      // Validate that we have all required answers
+      if (!answers[0] || !answers[1] || !answers[2] || !answers[3]) {
+        throw new Error('Please answer all questions before generating the story.');
+      }
+
       const prompt = `Create an engaging story where:
       - The main idea is: ${answers[0]}
       - ${answers[1]}
@@ -231,7 +252,7 @@ const loadingMessages = [
       if (!response.ok) {
         const errorText = await response.text();
         console.error('API Error:', errorText);
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}. ${errorText}`);
       }
 
       const data = await response.json();
@@ -277,10 +298,10 @@ const loadingMessages = [
         try {
           await navigator.share({
             title: 'My Generated Story',
-            text: storyContent.textContent
+            text: generatedText
           });
         } catch {
-          navigator.clipboard.writeText(storyContent.textContent);
+          navigator.clipboard.writeText(generatedText);
           shareButton.textContent = 'Copied to clipboard!';
           setTimeout(() => {
             shareButton.textContent = 'Share Story';
@@ -293,13 +314,24 @@ const loadingMessages = [
 
     } catch (error) {
       console.error('Error generating story:', error);
-      storyContent.innerHTML = `<p class="text-red-600">Error generating story: ${error.message}</p>`;
-      storyContainer.appendChild(storyContent);
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'p-6 text-red-600 text-lg font-bold';
+      errorMessage.textContent = `Error generating story: ${error.message}`;
+      storyContainer.innerHTML = '';
+      storyContainer.appendChild(errorMessage);
       
       const mainContainer = document.querySelector('.max-w-2xl');
       if (mainContainer) {
         mainContainer.innerHTML = '';
         mainContainer.appendChild(storyContainer);
+      }
+    } finally {
+      // Always reset the generating flag and button state
+      isGenerating = false;
+      if (generateBtn) {
+        generateBtn.disabled = false;
+        generateBtn.style.opacity = '1';
+        generateBtn.textContent = 'Generate Story';
       }
     }
   }
